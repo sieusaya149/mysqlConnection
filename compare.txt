@@ -1,0 +1,98 @@
+ab -n 1000  -c 10 http://localhost:3003/normal (end connection after query)
+Concurrency Level:      10
+Time taken for tests:   1.467 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      1015000 bytes
+HTML transferred:       806000 bytes
+Requests per second:    681.51 [#/sec] (mean)
+Time per request:       14.673 [ms] (mean)
+Time per request:       1.467 [ms] (mean, across all concurrent requests)
+Transfer rate:          675.52 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.2      0       7
+Processing:     6   14   4.3     14      44
+Waiting:        6   14   4.3     14      44
+Total:          6   14   4.3     14      44
+
+Percentage of the requests served within a certain time (ms)
+  50%     14
+  66%     15
+  75%     16
+  80%     16
+  90%     18
+  95%     20
+  98%     28
+  99%     37
+ 100%     44 (longest request)
+
+ ab -n 1000  -c 10 http://localhost:3003/normal  (no end)
+
+crash app
+Error: Too many connections
+    at Packet.asError (/Users/hunghoang/project/mysql_connection/node_modules/mysql2/lib/packets/packet.js:728:17)
+    at ClientHandshake.execute (/Users/hunghoang/project/mysql_connection/node_modules/mysql2/lib/commands/command.js:29:26)
+    at Connection.handlePacket (/Users/hunghoang/project/mysql_connection/node_modules/mysql2/lib/connection.js:478:34)
+    at PacketParser.onPacket (/Users/hunghoang/project/mysql_connection/node_modules/mysql2/lib/connection.js:97:12)
+    at PacketParser.executeStart (/Users/hunghoang/project/mysql_connection/node_modules/mysql2/lib/packet_parser.js:75:16)
+    at Socket.<anonymous> (/Users/hunghoang/project/mysql_connection/node_modules/mysql2/lib/connection.js:104:25)
+    at Socket.emit (node:events:514:28)
+    at addChunk (node:internal/streams/readable:343:12)
+    at readableAddChunk (node:internal/streams/readable:316:9)
+    at Readable.push (node:internal/streams/readable:253:10) {
+  code: 'ER_CON_COUNT_ERROR',
+  errno: 1040,
+  sqlState: '',
+  sqlMessage: 'Too many connections',
+  sql: undefined
+}
+
+
+
+single connection 
+ab -n 10000  -c 10 http://localhost:3003/normal
+
+Concurrency Level:      10
+Time taken for tests:   7.908 seconds
+Complete requests:      10000
+Failed requests:        0
+Total transferred:      10150000 bytes
+HTML transferred:       8060000 bytes
+Requests per second:    1264.52 [#/sec] (mean)
+Time per request:       7.908 [ms] (mean)
+Time per request:       0.791 [ms] (mean, across all concurrent requests)
+Transfer rate:          1253.40 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       1
+Processing:     4    8   2.8      7      63
+Waiting:        4    8   2.8      7      63
+Total:          4    8   2.8      7      63
+
+Percentage of the requests served within a certain time (ms)
+  50%      7
+  66%      8
+  75%      9
+  80%      9
+  90%     10
+  95%     11
+  98%     12
+  99%     14
+ 100%     63 (longest request)
+
+ multiple connection 
+ab -n 10000  -c 10 http://localhost:3003/normal
+ Benchmarking localhost (be patient)
+Completed 1000 requests
+Completed 2000 requests
+Completed 3000 requests
+Completed 4000 requests
+Completed 5000 requests
+Completed 6000 requests
+Completed 7000 requests
+Completed 8000 requests
+apr_socket_recv: Connection refused (61)
+Total of 8204 requests completed
